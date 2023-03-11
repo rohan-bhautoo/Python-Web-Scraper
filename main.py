@@ -1,30 +1,58 @@
+import tkinter as tk
 import requests
 from bs4 import BeautifulSoup
 
-# make a request to the website and retrieve the HTML content
-url = 'https://realpython.github.io/fake-jobs/'
-response = requests.get(url)
-html_content = response.content
 
-# parse HTML Content with BeautifulSoup
-soup = BeautifulSoup(html_content, 'html.parser')
+class PythonWebScraper:
+    def __init__(self, master):
+        self.master = master
+        master.title("Web Scraper")
 
-# find all links on the webpage
-links = soup.find_all('a')
+        # create labels and entry fields
+        self.url_label = tk.Label(master, text="Enter URL:")
+        self.url_label.grid(row=0, column=0, padx=5, pady=5)
+        self.url_entry = tk.Entry(master)
+        self.url_entry.grid(row=0, column=1, padx=5, pady=5)
 
-# find all headings on the webpage
-headings = soup.find_all(['h1', 'h2', 'h3'])
+        self.output_label = tk.Label(master, text="Output:")
+        self.output_label.grid(row=1, column=0, padx=5, pady=5)
+        self.output_text = tk.Text(master, width=50, height=10)
+        self.output_text.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
 
-# find all links that have the text "click here"
-links = soup.find_all('a', string='click here')
+        # create buttons
+        self.scrape_button = tk.Button(
+            master, text="Scrape", command=self.scrape)
+        self.scrape_button.grid(row=3, column=0, padx=5, pady=5)
 
-# find all images that have the class "thumbnail"
-images = soup.find_all('img', class_='thumbnail')
+        self.clear_button = tk.Button(
+            master, text="Clear", command=self.clear_output)
+        self.clear_button.grid(row=3, column=1, padx=5, pady=5)
 
-# extract all link URLs and store them in a list
-link_urls = [link.get('href') for link in links]
+    def scrape(self):
+        # get URL from entry field
+        url = self.url_entry.get()
 
-# extract all heading text and store them in a list
-heading_text = [heading.get_text() for heading in headings]
+        # make request to website
+        response = requests.get(url)
+        html_content = response.content
 
-print(images)
+        # parse HTML with BeautifulSoup
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        # find all links on the webpage
+        links = soup.find_all('a')
+
+        # clear output text
+        self.output_text.delete('1.0', tk.END)
+
+        # output data to text field
+        for link in links:
+            self.output_text.insert(tk.END, link.get('href') + '\n')
+
+    def clear_output(self):
+        self.output_text.delete('1.0', tk.END)
+
+
+root = tk.Tk()
+web_scraper_gui = PythonWebScraper(root)
+root.mainloop()
