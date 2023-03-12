@@ -11,12 +11,12 @@ class PythonWebScraper:
         # create labels and entry fields
         self.url_label = tk.Label(master, text="Enter URL:")
         self.url_label.grid(row=0, column=0, padx=5, pady=5)
-        self.url_entry = tk.Entry(master)
+        self.url_entry = tk.Entry(master, width=60)
         self.url_entry.grid(row=0, column=1, padx=5, pady=5)
 
         self.output_label = tk.Label(master, text="Output:")
         self.output_label.grid(row=1, column=0, padx=5, pady=5)
-        self.output_text = tk.Text(master, width=50, height=10)
+        self.output_text = tk.Text(master, width=60, height=10)
         self.output_text.grid(row=2, column=0, columnspan=2, padx=5, pady=5)
 
         # create buttons
@@ -54,5 +54,6 @@ class PythonWebScraper:
 
 
 root = tk.Tk()
+root.geometry("500x270")
 web_scraper_gui = PythonWebScraper(root)
 root.mainloop()
