@@ -14,7 +14,8 @@ class PythonWebScraper:
         self.url_entry = tk.Entry(master, width=50)
         self.url_entry.grid(row=0, column=1, padx=5, pady=5)
 
-        self.options = ["Links", "Headings"]
+        self.options = ["Links", "Headings", "Images",
+                        "Paragraphs", "Meta Data", "CSS Files", "Scripts"]
         self.variable = tk.StringVar(master)
         self.variable.set(self.options[0])
 
@@ -56,7 +57,22 @@ class PythonWebScraper:
         links = soup.find_all('a')
 
         # find all headings on the webpage
-        headings = soup.find_all(['h1', 'h2', 'h3'])
+        headings = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+
+        # find all images
+        images = soup.find_all('img')
+
+        # find all paragraphs
+        paragraphs = soup.find_all('p')
+
+        # scrape the meta data of the webpage
+        meta_data = soup.find_all('meta')
+        
+        # scrape the css_files of the webpage
+        css_files = soup.find_all('link', attrs={"rel" : "stylesheet"})
+        
+        # scrape the scripts of the webpage
+        scripts = soup.find_all('script')
 
         # clear output text
         self.output_text.delete('1.0', tk.END)
@@ -67,7 +83,24 @@ class PythonWebScraper:
                 self.output_text.insert(tk.END, link.get('href') + '\n')
         elif option == self.options[1]:
             for heading in headings:
-                self.output_text.insert(tk.END, heading.get_text() + '\n')
+                self.output_text.insert(
+                    tk.END, heading.get_text().strip() + '\n')
+        elif option == self.options[2]:
+            for image in images:
+                self.output_text.insert(tk.END, image.get('src') + '\n')
+        elif option == self.options[3]:
+            for paragraph in paragraphs:
+                self.output_text.insert(
+                    tk.END, paragraph.get_text().strip() + '\n')
+        elif option == self.options[4]:
+            for meta in meta_data:
+                self.output_text.insert(tk.END, str(meta) + '\n')
+        elif option == self.options[5]:
+            for css_file in css_files:
+                self.output_text.insert(tk.END, str(css_file) + '\n')
+        elif option == self.options[6]:
+            for script in scripts:
+                self.output_text.insert(tk.END, str(script) + '\n')
 
     def clear_output(self):
         self.output_text.delete('1.0', tk.END)
