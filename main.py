@@ -66,7 +66,7 @@ class PythonWebScraper:
         paragraphs = soup.find_all('p')
 
         # scrape the meta data of the webpage
-        meta_data = soup.find_all('meta')
+        meta_data = soup.find_all(['meta', 'title'])
         
         # scrape the css_files of the webpage
         css_files = soup.find_all('link', attrs={"rel" : "stylesheet"})
