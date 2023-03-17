@@ -27,7 +27,7 @@ class PythonWebScraper:
 
         self.output_label = tk.Label(master, text="Output:")
         self.output_label.grid(row=2, column=0, padx=5, pady=5)
-        self.output_text = tk.Text(master, width=50, height=10)
+        self.output_text = tk.Text(master, width=55, height=20)
         self.output_text.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
 
         # create buttons
