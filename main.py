@@ -1,7 +1,7 @@
 import tkinter as tk
 import requests
 from bs4 import BeautifulSoup
-
+from datetime import datetime
 
 class PythonWebScraper:
     def __init__(self, master):
@@ -10,7 +10,7 @@ class PythonWebScraper:
 
         # create labels and entry fields
         self.url_label = tk.Label(master, text="Enter URL:")
-        self.url_label.grid(row=0, column=0, padx=5, pady=5)
+        self.url_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
         self.url_entry = tk.Entry(master, width=50)
         self.url_entry.grid(row=0, column=1, padx=5, pady=5)
 
@@ -20,24 +20,29 @@ class PythonWebScraper:
         self.variable.set(self.options[0])
 
         self.output_label = tk.Label(master, text="Options:")
-        self.output_label.grid(row=1, column=0, padx=5, pady=5)
+        self.output_label.grid(row=1, column=0, padx=5, pady=5, sticky='w')
 
         self.dropdown = tk.OptionMenu(root, self.variable, *self.options)
-        self.dropdown.grid(row=1, column=1, padx=5, pady=5)
+        self.dropdown.grid(row=1, column=1, padx=5, pady=5, sticky='w')
+
+        self.checkVariable = tk.IntVar(master)
+        self.C1 = tk.Checkbutton(master, text="Store data in text file", variable=self.checkVariable,
+                                 onvalue=1, offvalue=0)
+        self.C1.grid(row=2, column=0, padx=5, pady=5, sticky='w')
 
         self.output_label = tk.Label(master, text="Output:")
-        self.output_label.grid(row=2, column=0, padx=5, pady=5)
+        self.output_label.grid(row=3, column=0, padx=5, pady=5, sticky='w')
         self.output_text = tk.Text(master, width=55, height=20)
-        self.output_text.grid(row=3, column=0, columnspan=2, padx=5, pady=5)
+        self.output_text.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
 
         # create buttons
         self.scrape_button = tk.Button(
             master, text="Scrape", command=self.scrape, width=10)
-        self.scrape_button.grid(row=4, column=0, padx=5, pady=5)
+        self.scrape_button.grid(row=5, column=0, padx=5, pady=5)
 
         self.clear_button = tk.Button(
             master, text="Clear", command=self.clear_output, width=10)
-        self.clear_button.grid(row=4, column=1, padx=5, pady=5)
+        self.clear_button.grid(row=5, column=1, padx=5, pady=5)
 
     def scrape(self):
         # get URL from entry field
@@ -45,6 +50,9 @@ class PythonWebScraper:
 
         # get option text
         option = self.variable.get()
+
+        # get checkbox state
+        checked = self.checkVariable.get()
 
         # make request to website
         response = requests.get(url)
@@ -67,10 +75,10 @@ class PythonWebScraper:
 
         # scrape the meta data of the webpage
         meta_data = soup.find_all(['meta', 'title'])
-        
+
         # scrape the css_files of the webpage
-        css_files = soup.find_all('link', attrs={"rel" : "stylesheet"})
-        
+        css_files = soup.find_all('link', attrs={"rel": "stylesheet"})
+
         # scrape the scripts of the webpage
         scripts = soup.find_all('script')
 
@@ -102,8 +110,14 @@ class PythonWebScraper:
             for script in scripts:
                 self.output_text.insert(tk.END, str(script) + '\n')
 
+        if checked == 1:
+            now = datetime.utcnow()
+            format = now.strftime('%Y%m%d%H%M')
+            with open(f'data/data_{format}.txt', 'w') as f:
+                f.write(self.output_text.get("1.0", "end-1c"))
+
     def clear_output(self):
-        self.output_text.delete('1.0', tk.END)
+        self.output_text.delete("1.0", "end-1c")
 
 
 root = tk.Tk()
