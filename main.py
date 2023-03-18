@@ -1,7 +1,7 @@
 import tkinter as tk
 import requests
 from bs4 import BeautifulSoup
-
+from datetime import datetime
 
 class PythonWebScraper:
     def __init__(self, master):
@@ -50,6 +50,9 @@ class PythonWebScraper:
 
         # get option text
         option = self.variable.get()
+
+        # get checkbox state
+        checked = self.checkVariable.get()
 
         # make request to website
         response = requests.get(url)
@@ -107,8 +110,14 @@ class PythonWebScraper:
             for script in scripts:
                 self.output_text.insert(tk.END, str(script) + '\n')
 
+        if checked == 1:
+            now = datetime.utcnow()
+            format = now.strftime('%Y%m%d%H%M')
+            with open(f'data/data_{format}.txt', 'w') as f:
+                f.write(self.output_text.get("1.0", "end-1c"))
+
     def clear_output(self):
-        self.output_text.delete('1.0', tk.END)
+        self.output_text.delete("1.0", "end-1c")
 
 
 root = tk.Tk()
