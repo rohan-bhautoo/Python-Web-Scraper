@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+from tkinter import ttk
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -10,47 +11,55 @@ class PythonWebScraper:
         self.master = master
         master.title("Web Scraper")
 
+        # create tab control
+        self.tabControl = ttk.Notebook(master)
+        self.tab1 = ttk.Frame(self.tabControl)
+        self.tab2 = ttk.Frame(self.tabControl)
+        self.tabControl.add(self.tab1, text='Scraper')
+        self.tabControl.add(self.tab2, text='Table Data')
+        self.tabControl.pack(expand=1, fill="both")
+
         # create labels and entry fields
-        self.url_label = tk.Label(master, text="Enter URL:")
+        self.url_label = tk.Label(self.tab1, text="Enter URL:")
         self.url_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
-        self.url_entry = tk.Entry(master, width=50)
+        self.url_entry = tk.Entry(self.tab1, width=50)
         self.url_entry.grid(row=0, column=1, padx=5, pady=5)
 
         # dropdown options
         self.options = ["Links", "Headings", "Images",
                         "Paragraphs", "Meta Data", "CSS Files", "Scripts"]
-        self.variable = tk.StringVar(master)
+        self.variable = tk.StringVar(self.tab1)
         self.variable.set(self.options[0])
-        self.output_label = tk.Label(master, text="Options:")
+        self.output_label = tk.Label(self.tab1, text="Options:")
         self.output_label.grid(row=1, column=0, padx=5, pady=5, sticky='w')
         self.dropdown = tk.OptionMenu(
-            root, self.variable, *self.options, command=self.show_hide_checkbox)
+            self.tab1, self.variable, *self.options, command=self.show_hide_checkbox)
         self.dropdown.grid(row=1, column=1, padx=5, pady=5, sticky='w')
 
         # download images checkbox
-        self.downloadImg = tk.IntVar(master)
-        self.checkbox1 = tk.Checkbutton(master, text="Download images", variable=self.downloadImg,
+        self.downloadImg = tk.IntVar(self.tab1)
+        self.checkbox1 = tk.Checkbutton(self.tab1, text="Download images", variable=self.downloadImg,
                                         onvalue=1, offvalue=0)
         self.checkbox1.grid_remove()
 
         # store data in file checkbox
-        self.checkVariable = tk.IntVar(master)
-        self.checkbox2 = tk.Checkbutton(master, text="Store data in text file", variable=self.checkVariable,
+        self.checkVariable = tk.IntVar(self.tab1)
+        self.checkbox2 = tk.Checkbutton(self.tab1, text="Store data in text file", variable=self.checkVariable,
                                         onvalue=1, offvalue=0)
         self.checkbox2.grid(row=3, column=0, padx=5, pady=5, sticky='w')
 
-        self.output_label = tk.Label(master, text="Output:")
+        self.output_label = tk.Label(self.tab1, text="Output:")
         self.output_label.grid(row=4, column=0, padx=5, pady=5, sticky='w')
-        self.output_text = tk.Text(master, width=55, height=20)
+        self.output_text = tk.Text(self.tab1, width=55, height=20)
         self.output_text.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
 
         # create buttons
         self.scrape_button = tk.Button(
-            master, text="Scrape", command=self.scrape, width=10)
+            self.tab1, text="Scrape", command=self.scrape, width=10)
         self.scrape_button.grid(row=6, column=0, padx=5, pady=5)
 
         self.clear_button = tk.Button(
-            master, text="Clear", command=self.clear_output, width=10)
+            self.tab1, text="Clear", command=self.clear_output, width=10)
         self.clear_button.grid(row=6, column=1, padx=5, pady=5)
 
     def scrape(self):
