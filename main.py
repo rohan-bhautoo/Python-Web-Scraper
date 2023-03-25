@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 import requests
 from bs4 import BeautifulSoup
@@ -62,6 +63,9 @@ class PythonWebScraper:
         # get checkbox state
         checked = self.checkVariable.get()
 
+        # get download img checkbox state
+        checkedImg = self.downloadImg.get()
+
         # make request to website
         response = requests.get(url)
         html_content = response.content
@@ -124,6 +128,37 @@ class PythonWebScraper:
             with open(f'data/data_{format}.txt', 'w') as f:
                 f.write(self.output_text.get("1.0", "end-1c"))
 
+        if checkedImg == 1:
+            count = 1
+            now = datetime.utcnow()
+            format = now.strftime('%Y%m%d%H%M')
+
+            directory = 'images/' + str(format) + "/"
+
+            # create the directory if it doesn't already exist
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+
+            # loop through each image and download it
+            for image in images:
+                url = image.get('src')
+
+                # send a GET request to the URL to download the image
+                response = requests.get(url)
+
+                # construct the file name to save the image as
+                filename = os.path.join(directory, 'image{}'.format(count))
+
+                # use os.path.splitext to split the filename into base name and extension
+                _, extension = os.path.splitext(url)
+
+                print(filename)
+
+                # save the image to the chosen file path
+                with open(f'{filename}{extension}', 'wb') as f:
+                    f.write(response.content)
+                    count += 1
+
     def clear_output(self):
         self.output_text.delete("1.0", "end-1c")
 
@@ -133,6 +168,7 @@ class PythonWebScraper:
         if value == self.options[2]:
             self.checkbox1.grid(row=2, column=0, padx=5, pady=5, sticky='w')
         else:
+            self.downloadImg.set(0)
             self.checkbox1.grid_remove()
 
 
