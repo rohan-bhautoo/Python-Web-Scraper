@@ -15,9 +15,9 @@ class Tab2:
         self.url_entry = tk.Entry(self.frame, width=50)
         self.url_entry.grid(row=0, column=1, padx=5, pady=5)
 
-        # create output text widget
-        self.output_text = tk.Text(self.frame, width=55, height=26)
-        self.output_text.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
+        # create output table
+        self.treeview = ttk.Treeview(self.frame, columns=())
+        self.treeview.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
 
         # create button
         self.scrape_button = tk.Button(
@@ -55,15 +55,17 @@ class Tab2:
                 table_row.append(td.text.strip())
             table_rows.append(table_row)
 
-        # display table in output text widget
-        self.output_text.delete('1.0', tk.END)
+        # clear table
+        self.treeview.delete(*self.treeview.get_children())
+
+        # populate table in treeview widget
+        self.treeview['columns'] = table_header
+        self.treeview['show'] = 'headings'
         for header in table_header:
-            self.output_text.insert(tk.END, header + '\t')
-        self.output_text.insert(tk.END, '\n')
+            self.treeview.heading(header, text=header)
+            self.treeview.column(header, width=100)
         for row in table_rows:
-            for cell in row:
-                self.output_text.insert(tk.END, cell + '\t')
-            self.output_text.insert(tk.END, '\n')
+            self.treeview.insert('', tk.END, values=row)
 
     def clear_output(self):
-        self.output_text.delete("1.0", "end-1c")
+        self.treeview.delete(*self.treeview.get_children())
