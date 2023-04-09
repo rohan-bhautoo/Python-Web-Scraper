@@ -12,12 +12,13 @@ class Tab2:
         # create labels and entry fields
         self.url_label = tk.Label(self.frame, text="Enter URL:")
         self.url_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
-        self.url_entry = tk.Entry(self.frame, width=50)
+        self.url_entry = tk.Entry(self.frame, width=60)
         self.url_entry.grid(row=0, column=1, padx=5, pady=5)
 
         # create output table
-        self.treeview = ttk.Treeview(self.frame, columns=())
-        self.treeview.grid(row=1, column=0, columnspan=2, padx=5, pady=5)
+        self.treeview = ttk.Treeview(self.frame, columns=(), height=20)
+        self.treeview.grid(row=1, column=0, columnspan=2,
+                           padx=5, pady=5, sticky=tk.NSEW)
 
         # create button
         self.scrape_button = tk.Button(
@@ -63,7 +64,7 @@ class Tab2:
         self.treeview['show'] = 'headings'
         for header in table_header:
             self.treeview.heading(header, text=header)
-            self.treeview.column(header, width=100)
+            self.treeview.column(header)
         for row in table_rows:
             self.treeview.insert('', tk.END, values=row)
 

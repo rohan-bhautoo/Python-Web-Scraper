@@ -15,7 +15,7 @@ class PythonWebScraper:
         self.tab2 = Tab2(self.tabControl)
         self.tabControl.add(self.tab1.frame, text='Scraper')
         self.tabControl.add(self.tab2.frame, text='Table Data')
-        self.tabControl.pack(expand=1, fill="both")
+        self.tabControl.pack(expand=True, fill="both")
 
 
 root = tk.Tk()
