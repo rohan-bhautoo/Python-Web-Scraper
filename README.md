@@ -119,6 +119,24 @@ for tr in table.find_all('tr'):
     table_rows.append(table_row)
 ```
 
+### Save Table Data in CSV file
+```python
+now = datetime.utcnow()
+format = now.strftime("%Y%m%d%H%M")
+with open(f"csv/csv_{format}.csv", "w") as f:
+    csvwriter = csv.writer(f, delimiter=",")
+
+    if includeHeader == 1:
+        print("save header:", table_header)
+        csvwriter.writerow(table_header)
+
+    for row_id in self.treeview.get_children():
+        row = self.treeview.item(row_id)["values"]
+        if row != "":
+            print("save row:", row)
+            csvwriter.writerow(row)
+```
+
 ## Limitation
 - The Python Web Scraper may not work on web pages with complex JavaScript-based content.
 - Some websites may have terms of service or robots.txt that prohibit scraping. Make sure to comply with any legal and ethical requirements.
